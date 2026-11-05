@@ -3,13 +3,16 @@
 from argparse import ArgumentParser
 import pandas as pd
 
-def clean_data(region: str = "PT"):
+from .disk_ops import save_data, load_data
+
+DEFAULT_DATA_FILE_PATH = 'life_expectancy/data/eu_life_expectancy_raw.tsv'
+DEFAULT_REGION = "PT"
+
+def clean_data(df: pd.DataFrame, region: str = "PT") -> pd.DataFrame:
     """
     Cleans the tsv data in the data folder, filters
     for the given region and saves it as a CSV file.
     """
-
-    df = pd.read_csv('life_expectancy/data/eu_life_expectancy_raw.tsv',sep = '\t')
 
     df_info = df.iloc[:, 0].str.split(",", expand=True)
     df_info.columns = ["unit", "sex", "age", "region"]
@@ -35,9 +38,22 @@ def clean_data(region: str = "PT"):
         ascending=False
     )
 
-    long_df.to_csv('life_expectancy/data/pt_life_expectancy.csv', index=False)
+    return long_df
+
+def main() -> None:
+    """Main function to clean the life expectancy dataset based on the given region."""
+    parser = ArgumentParser(description="Clean the life expectancy dataset")
+    parser.add_argument(
+        "--region",
+        default=DEFAULT_REGION,
+        help="Region to filter for",
+        type=str
+    )
+    args = parser.parse_args()
+
+    df = load_data(DEFAULT_DATA_FILE_PATH)
+    cleaned_df = clean_data(df, region=args.region)
+    save_data(cleaned_df, f'life_expectancy/data/{args.region.lower()}_life_expectancy.csv')
 
 if __name__ == "__main__":  # pragma: no cover
-    parser = ArgumentParser(description="Clean the life expectancy dataset")
-    parser.add_argument("--region", default="PT", help="Region to filter for")
-    clean_data(parser.parse_args().region)
+    main()
