@@ -1,12 +1,5 @@
-"""script to clean the life expectancy dataset"""
-
-from argparse import ArgumentParser
+"""Functions for cleaning the life expectancy dataset."""
 import pandas as pd
-
-from .disk_ops import save_data, load_data
-
-DEFAULT_DATA_FILE_PATH = 'life_expectancy/data/eu_life_expectancy_raw.tsv'
-DEFAULT_REGION = "PT"
 
 def clean_data(df: pd.DataFrame, region: str = "PT") -> pd.DataFrame:
     """
@@ -39,22 +32,3 @@ def clean_data(df: pd.DataFrame, region: str = "PT") -> pd.DataFrame:
     ).reset_index(drop=True)
 
     return long_df
-
-def main() -> pd.DataFrame:
-    """Main function to clean the life expectancy dataset based on the given region."""
-    parser = ArgumentParser(description="Clean the life expectancy dataset")
-    parser.add_argument(
-        "--region",
-        default=DEFAULT_REGION,
-        help="Region to filter for",
-        type=str
-    )
-    args = parser.parse_args()
-
-    df = load_data(DEFAULT_DATA_FILE_PATH)
-    cleaned_df = clean_data(df, region=args.region)
-    save_data(cleaned_df, f'life_expectancy/data/{args.region.lower()}_life_expectancy.csv')
-    return cleaned_df
-
-if __name__ == "__main__":  # pragma: no cover
-    main()

@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from life_expectancy.disk_ops import load_data
+from life_expectancy.loading import load_data
 
 
 def test_loading(eu_life_expectancy_raw, tmp_path):

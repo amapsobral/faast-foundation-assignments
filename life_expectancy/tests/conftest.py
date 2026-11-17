@@ -12,10 +12,10 @@ def pt_life_expectancy_expected() -> pd.DataFrame:
 
 @pytest.fixture(scope="session")
 def eu_life_expectancy_raw() -> pd.DataFrame:
-    """Fixture to load the expected output of the cleaning script for FR region"""
+    """Fixture to load the raw EU life expectancy data."""
     return pd.read_csv(FIXTURES_DIR / "eu_life_expectancy_raw.tsv", sep="\t")
 
 @pytest.fixture(scope="session")
 def eu_life_expectancy_expected() -> pd.DataFrame:
-    """Fixture to load the expected output of the cleaning script for FR region"""
+    """Fixture to load the expected cleaned output for all regions."""
     return pd.read_csv(FIXTURES_DIR / "eu_life_expectancy_expected.csv")
