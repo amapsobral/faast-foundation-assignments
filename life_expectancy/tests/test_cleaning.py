@@ -1,7 +1,9 @@
 """Tests for the cleaning module"""
 import pandas as pd
+import pytest
 
 from life_expectancy import cleaning, main
+from life_expectancy.region import Region
 
 
 def test_clean_data(eu_life_expectancy_raw, pt_life_expectancy_expected):
@@ -15,7 +17,7 @@ def test_clean_data(eu_life_expectancy_raw, pt_life_expectancy_expected):
 def test_clean_data_fr(eu_life_expectancy_expected):
     """Compare cleaned French data with the expected EU output."""
     raw_data = main.load_data(main.DEFAULT_DATA_FILE_PATH)
-    clean_df = cleaning.clean_data(raw_data, region="FR")
+    clean_df = cleaning.clean_data(raw_data, region=Region.FR)
     expected_fr = eu_life_expectancy_expected[
         eu_life_expectancy_expected["region"] == "FR"
     ].reset_index(drop=True)
@@ -49,3 +51,14 @@ def test_main(monkeypatch):
     assert saved["path"] == "life_expectancy/data/fr_life_expectancy.csv"
     assert saved["df"]["region"].tolist() == ["FR"]
     pd.testing.assert_frame_equal(cleaned_df, saved["df"])
+
+
+def test_main_rejects_invalid_region(monkeypatch, capsys):
+    """Reject an unknown region with an argparse error."""
+    monkeypatch.setattr("sys.argv", ["cleaning", "--region", "ZZ"])
+
+    with pytest.raises(SystemExit) as exc_info:
+        main.main()
+
+    assert exc_info.value.code == 2
+    assert "invalid region 'ZZ'" in capsys.readouterr().err

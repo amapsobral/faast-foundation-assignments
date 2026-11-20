@@ -1,7 +1,9 @@
 """Functions for cleaning the life expectancy dataset."""
 import pandas as pd
 
-def clean_data(df: pd.DataFrame, region: str = "PT") -> pd.DataFrame:
+from .region import Region
+
+def clean_data(df: pd.DataFrame, region: Region = Region.PT) -> pd.DataFrame:
     """
     Cleans the tsv data in the data folder, filters
     for the given region and saves it as a CSV file.
@@ -26,7 +28,7 @@ def clean_data(df: pd.DataFrame, region: str = "PT") -> pd.DataFrame:
 
     long_df = long_df.dropna(subset=["year", "value"])
     long_df["year"] = long_df["year"].astype(int)
-    long_df = long_df[long_df["region"] == region].sort_values(
+    long_df = long_df[long_df["region"] == region.value].sort_values(
         "year",
         ascending=False
     ).reset_index(drop=True)
