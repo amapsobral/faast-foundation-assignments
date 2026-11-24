@@ -2,54 +2,18 @@
 
 from enum import Enum
 
-_COUNTRY_CODES = frozenset(
+_NON_COUNTRY_CODES = frozenset(
     {
-        "AL",
-        "AM",
-        "AT",
-        "AZ",
-        "BE",
-        "BG",
-        "BY",
-        "CH",
-        "CY",
-        "CZ",
-        "DE",
-        "DK",
-        "EE",
-        "EL",
-        "ES",
-        "FI",
-        "FR",
-        "GE",
-        "HR",
-        "HU",
-        "IE",
-        "IS",
-        "IT",
-        "LI",
-        "LT",
-        "LU",
-        "LV",
-        "MD",
-        "ME",
-        "MK",
-        "MT",
-        "NL",
-        "NO",
-        "PL",
-        "PT",
-        "RO",
-        "RS",
-        "RU",
-        "SE",
-        "SI",
-        "SK",
-        "SM",
-        "TR",
-        "UA",
-        "UK",
-        "XK",
+        "DE_TOT",
+        "EA18",
+        "EA19",
+        "EEA30_2007",
+        "EEA31",
+        "EFTA",
+        "EU27_2007",
+        "EU27_2020",
+        "EU28",
+        "FX",
     }
 )
 
@@ -117,4 +81,4 @@ class Region(Enum):
     @classmethod
     def list_countries(cls):
         """Return country codes used by the dataset."""
-        return [region.value for region in cls if region.value in _COUNTRY_CODES]
+        return [region.value for region in cls if region.value not in _NON_COUNTRY_CODES]
